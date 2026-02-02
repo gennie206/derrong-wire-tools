@@ -80,10 +80,10 @@ const HypalonCalculator = () => {
   const currentSpec = SPEC_DATA.find((s) => s.size === wireSize);
 
   return (
-    <div className="min-h-screen bg-background p-4 md:p-8">
-      <div className="mx-auto max-w-2xl space-y-6">
+    <div className="min-h-screen min-h-[100dvh] bg-background p-4 md:p-8 safe-area-inset flex flex-col">
+      <div className="mx-auto max-w-2xl space-y-6 flex-1 flex flex-col">
         {/* 標題區域 */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-2 flex-shrink-0">
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-primary">
             <Zap className="h-5 w-5" />
             <span className="text-sm font-medium">華新麗華規格</span>
@@ -115,12 +115,16 @@ const HypalonCalculator = () => {
                 電線標稱截面積
               </Label>
               <Select value={wireSize} onValueChange={setWireSize}>
-                <SelectTrigger className="w-full">
+                <SelectTrigger className="w-full min-h-[48px] text-base">
                   <SelectValue placeholder="選擇截面積" />
                 </SelectTrigger>
                 <SelectContent>
                   {SPEC_DATA.map((spec) => (
-                    <SelectItem key={spec.size} value={spec.size}>
+                    <SelectItem 
+                      key={spec.size} 
+                      value={spec.size}
+                      className="min-h-[44px] text-base"
+                    >
                       {spec.size} mm²
                     </SelectItem>
                   ))}
@@ -141,25 +145,25 @@ const HypalonCalculator = () => {
               >
                 <Label
                   htmlFor="pipe"
-                  className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 p-4 transition-all ${
+                  className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 p-4 min-h-[56px] transition-all active:scale-[0.98] ${
                     installMethod === "pipe"
                       ? "border-primary bg-primary/5 text-primary"
                       : "border-border hover:border-primary/50"
                   }`}
                 >
                   <RadioGroupItem value="pipe" id="pipe" className="sr-only" />
-                  <span className="font-medium">電線管</span>
+                  <span className="font-medium text-base">電線管</span>
                 </Label>
                 <Label
                   htmlFor="air"
-                  className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 p-4 transition-all ${
+                  className={`flex cursor-pointer items-center justify-center gap-2 rounded-lg border-2 p-4 min-h-[56px] transition-all active:scale-[0.98] ${
                     installMethod === "air"
                       ? "border-primary bg-primary/5 text-primary"
                       : "border-border hover:border-primary/50"
                   }`}
                 >
                   <RadioGroupItem value="air" id="air" className="sr-only" />
-                  <span className="font-medium">空中 / 暗渠</span>
+                  <span className="font-medium text-base">空中 / 暗渠</span>
                 </Label>
               </RadioGroup>
             </div>
@@ -197,12 +201,16 @@ const HypalonCalculator = () => {
                   同管條數
                 </Label>
                 <Select value={quantity} onValueChange={setQuantity}>
-                  <SelectTrigger className="w-full">
+                  <SelectTrigger className="w-full min-h-[48px] text-base">
                     <SelectValue placeholder="選擇條數" />
                   </SelectTrigger>
                   <SelectContent>
                     {Object.entries(QUANTITY_FACTORS).map(([key, factor]) => (
-                      <SelectItem key={key} value={key}>
+                      <SelectItem 
+                        key={key} 
+                        value={key}
+                        className="min-h-[44px] text-base"
+                      >
                         {key} 條 (係數: {factor})
                       </SelectItem>
                     ))}
@@ -213,8 +221,8 @@ const HypalonCalculator = () => {
           </CardContent>
         </Card>
 
-        {/* 結果卡片 */}
-        <Card className="shadow-card hover:shadow-card-hover transition-shadow duration-300 overflow-hidden">
+        {/* 結果卡片 - 手機版置中顯示 */}
+        <Card className="shadow-card hover:shadow-card-hover transition-shadow duration-300 overflow-hidden flex-shrink-0 md:flex-shrink">
           <CardHeader className="bg-secondary">
             <CardTitle className="text-lg">計算結果</CardTitle>
           </CardHeader>
@@ -272,7 +280,7 @@ const HypalonCalculator = () => {
         </Card>
 
         {/* 說明區塊 */}
-        <div className="text-center text-xs text-muted-foreground space-y-1">
+        <div className="text-center text-xs text-muted-foreground space-y-1 pb-20 md:pb-4 flex-shrink-0">
           <p>資料來源：華新麗華 600V 海帕龍電線規格表</p>
           <p>導體最高工作溫度：90°C</p>
         </div>
