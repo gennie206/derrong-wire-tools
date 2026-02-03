@@ -44,6 +44,11 @@ All colors MUST be HSL.
     --tech-gradient: linear-gradient(135deg, hsl(215 80% 45%) 0%, hsl(200 85% 50%) 100%);
     --card-shadow: 0 4px 20px -4px hsl(215 25% 15% / 0.1);
     --card-shadow-hover: 0 8px 30px -4px hsl(215 25% 15% / 0.15);
+    /* 牌價查詢系統風格 */
+    --page-bg-calculator: 270 25% 97%;
+    --disclaimer-border: 25 95% 53%;
+    --list-bullet: 25 95% 53%;
+    --btn-primary-dark: 215 25% 25%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -129,5 +134,35 @@ All colors MUST be HSL.
     padding-bottom: env(safe-area-inset-bottom);
     padding-left: env(safe-area-inset-left);
     padding-right: env(safe-area-inset-right);
+  }
+}
+
+@layer components {
+  /* 牌價查詢系統風格：安全電流查詢頁背景 */
+  .calculator-page-bg {
+    background-color: hsl(var(--page-bg-calculator));
+  }
+  /* 免責聲明左側橘色邊條 */
+  .disclaimer-block {
+    border-left: 4px solid hsl(var(--disclaimer-border));
+  }
+  /* 資料來源橘色圓點列表 */
+  .data-source-list {
+    list-style: none;
+    padding-left: 0;
+  }
+  .data-source-list li {
+    position: relative;
+    padding-left: 1rem;
+  }
+  .data-source-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.5em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: hsl(var(--list-bullet));
   }
 }
