@@ -18,7 +18,7 @@ export default defineConfig(({ mode }) => ({
     mode === "development" && componentTagger(),
     VitePWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.ico", "pwa-icons/*.png"],
+      includeAssets: ["logo.png"],
       manifest: {
         name: "海帕龍查詢",
         short_name: "海帕龍",
@@ -31,17 +31,17 @@ export default defineConfig(({ mode }) => ({
         start_url: "/",
         icons: [
           {
-            src: "pwa-icons/icon-192.png",
+            src: "logo.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "pwa-icons/icon-512.png",
+            src: "logo.png",
             sizes: "512x512",
             type: "image/png",
           },
           {
-            src: "pwa-icons/icon-512.png",
+            src: "logo.png",
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
