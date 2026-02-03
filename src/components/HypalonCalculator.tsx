@@ -68,16 +68,28 @@ const TEMP_FACTORS_PVC = {
 };
 
 // 同一管內多條電線換算係數 f2（海帕龍與 PVC 共用，表3）
-const QUANTITY_FACTORS: Record<string, number> = {
-  "1": 1.0,
-  "2-3": 0.7,
-  "4": 0.63,
-  "5-6": 0.56,
-  "7-15": 0.49,
-  "16-40": 0.43,
-  "41-60": 0.39,
-  "60+": 0.34,
+type QuantityOption = {
+  value: string;
+  label: string;
+  factor: number;
 };
+
+const QUANTITY_OPTIONS: QuantityOption[] = [
+  { value: "1", label: "1 條", factor: 1.0 },
+  { value: "2", label: "2 條", factor: 0.7 },
+  { value: "3", label: "3 條", factor: 0.7 },
+  { value: "4", label: "4 條", factor: 0.63 },
+  { value: "5-6", label: "5-6 條", factor: 0.56 },
+  { value: "7-15", label: "7-15 條", factor: 0.49 },
+  { value: "16-40", label: "16-40 條", factor: 0.43 },
+  { value: "41-60", label: "41-60 條", factor: 0.39 },
+  { value: "60+", label: "60+ 條", factor: 0.34 },
+];
+
+const QUANTITY_FACTORS = QUANTITY_OPTIONS.reduce<Record<string, number>>((acc, option) => {
+  acc[option.value] = option.factor;
+  return acc;
+}, {});
 
 // 空中及暗渠多條佈設換算係數 f4（表5：條數 × 配列間距）
 type AirSpacing = "S=d" | "S=2d" | "S=3d";
@@ -122,17 +134,21 @@ const HypalonCalculator = () => {
     const tempKey = Math.round(temperature / 5) * 5;
     const clampedTemp = Math.max(20, Math.min(50, tempKey)) as 20 | 25 | 30 | 35 | 40 | 45 | 50;
 
+    let calculated = 0;
+
     if (installMethod === "pipe") {
       const baseAmp = spec.pipe_in;
       const tempFactor = tempFactors.pipe[clampedTemp];
-      const quantityFactor = QUANTITY_FACTORS[quantity];
-      return Math.round(baseAmp * tempFactor * quantityFactor * 10) / 10;
+      const quantityFactor = QUANTITY_FACTORS[quantity] ?? 1;
+      calculated = baseAmp * tempFactor * quantityFactor;
     } else {
       const baseAmp = spec.air_in;
       const tempFactor = tempFactors.air[clampedTemp];
       const f4 = AIR_F4_FACTORS[airSpacing][airCount] ?? 1;
-      return Math.round(baseAmp * tempFactor * f4 * 10) / 10;
+      calculated = baseAmp * tempFactor * f4;
     }
+
+    return Math.round(calculated);
   }, [wireSize, installMethod, temperature, quantity, airSpacing, airCount, specData, tempFactors]);
 
   const currentSpec = specData.find((s) => s.size === wireSize);
@@ -174,7 +190,7 @@ const HypalonCalculator = () => {
               }`}
             >
               <RadioGroupItem value="hypalon" id="hypalon" className="sr-only" />
-              海帕龍
+              海帕龍 (90°C)
             </Label>
             <Label
               htmlFor="pvc"
@@ -185,7 +201,7 @@ const HypalonCalculator = () => {
               }`}
             >
               <RadioGroupItem value="pvc" id="pvc" className="sr-only" />
-              105°C PVC 軟電線
+              PVC 軟線 (105°C)
             </Label>
           </RadioGroup>
         </div>
@@ -292,13 +308,13 @@ const HypalonCalculator = () => {
                     <SelectValue placeholder="請先選擇條數" />
                   </SelectTrigger>
                   <SelectContent>
-                    {Object.entries(QUANTITY_FACTORS).map(([key, factor]) => (
-                      <SelectItem 
-                        key={key} 
-                        value={key}
+                    {QUANTITY_OPTIONS.map((option) => (
+                      <SelectItem
+                        key={option.value}
+                        value={option.value}
                         className="min-h-[44px] text-base"
                       >
-                        {key} 條 (係數: {factor})
+                        {option.label} (係數: {option.factor})
                       </SelectItem>
                     ))}
                   </SelectContent>
